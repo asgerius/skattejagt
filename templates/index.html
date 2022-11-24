@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Skattejagt</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <meta charset="UTF-8">
+        <style>
+            body {
+                margin: 1em;
+            }
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            table {
+                font-size: 10pt;
+            }
+            td, th {
+                padding-top: 1px;
+                padding-bottom: 1px;
+                padding-left: 3px;
+                padding-right: 3px;
+            }
+            th {
+                font-weight: 600;
+            }
+            tr {
+                text-align: right;
+            }
+            tr.last {
+                font-weight: 600;
+            }
+            img {
+                width: 100%;
+            }
+            #update {
+                margin-bottom: 1em;
+            }
+            .emph {
+                font-weight: 700;
+                font-style: italic;
+            }
+        </style>
+        <script>
+            let loggedIn = false;
+            let showHint = true;
+            let currentTask;
+            let groupCode;
+
+            const hints = [
+                "Soduko.",
+                "Du vil sætte en kano i vandet, men ender som en af drengene på bænken.",
+                "Når du står på toppen, kan du fra sikker afstand betragte både vores alle sammens statsminister 🌹🌹🌹 og bølgen blå 🌊🌊🌊",
+                "Det rygtes, at der har været serveret stegt flæsk med persillesovs ad libitum.",
+                "Du har fundet nogle tal, men forstår ej deres mening: 55.772614 12.471508.",
+                'Stedet der aldrig skuffer med <span class="emph">10</span> shots om fredagen.',
+            ];
+
+            window.onload = () => {
+                document.getElementById("group-code").value = null;
+                document.getElementById("group-code").oninput = (event) => {
+                    groupCode = Number.parseInt(event.target.value);
+                };
+
+                document.getElementById("log-in").onclick = logIn;
+                document.getElementById("update").onclick = updateScores;
+
+                updateVisibility();
+            };
+
+            const updateVisibility = () => {
+                setVisible(document.getElementById("if-not-logged-in"), !loggedIn);
+                setVisible(document.getElementById("if-logged-in"), loggedIn);
+
+                for (let i = 0; i < 6; ++ i) {
+                    setVisible(document.getElementById(`task-${i}`), false);
+                }
+
+                if (showHint) {
+                    setVisible(document.getElementById("if-hint"), true);
+                    document.getElementById("if-hint").innerHTML = "<p>" + hints[currentTask] + "</p>";
+                } else {
+                    setVisible(document.getElementById("if-hint"), false);
+                    setVisible(document.getElementById(`task-${currentTask}`), true);
+                }
+            };
+
+            const setVisible = (elem, visible) => {
+                if (visible) {
+                    elem.style.display = "block";
+                } else {
+                    elem.style.display = "none";
+                }
+            };
+
+            const request = async (addr) => {
+                return (await fetch(addr)).json();
+            };
+
+            const updateScores = async () => {
+                const scores = await request("/scores");
+                const total = [];
+                for (let i = 0; i < 6; ++ i) {
+                    total.push(0)
+                    for (j = 0; j < 3; ++ j) {
+                        total[i] += scores[i][j];
+                        document.getElementById(`${i}-${j}`).innerText = scores[i][j].toFixed(1);
+                    }
+                }
+                for (let i = 0; i < 3; ++ i) {
+                    document.getElementById(`${i}`).innerText = total[i].toFixed(1);
+                }
+            };
+
+            const logIn = async () => {
+                const response = await request(`/log-in?group=${groupCode}`);
+
+                loggedIn = true;
+                showHint = response.show_hint;
+                currentTask = response.current_post;
+
+                updateVisibility();
+            };
+        </script>
+    </head>
+
+    <body>
+        <h1>Skattejagt</h1>
+        <div id="if-not-logged-in">
+            <p>Indtast jeres gruppes kode her:</p>
+            <input type="text" id="group-code">
+            <button id="log-in">Log ind</button>
+        </div>
+        <div id="if-logged-in">
+            <div id="if-hint"></div>
+            <div id="task-0">
+
+            </div>
+            <div id="task-1">
+
+            </div>
+            <div id="task-2">
+
+            </div>
+            <div id="task-3">
+
+            </div>
+            <div id="task-4">
+
+            </div>
+            <div id="task-5">
+
+            </div>
+        </div>
+
+        <h2>Leaderboard</h2>
+        <button id="update">Opdater</button>
+        <table>
+            <tr>
+                <th></th>
+                <th>Gruppe 1</th>
+                <th>Gruppe 2</th>
+                <th>Gruppe 3</th>
+            </tr>
+            <tr><td>Post 1</td><td id="0-0">0.0</td><td id="0-1">0.0</td><td id="0-2">0.0</td></tr>
+            <tr><td>Post 2</td><td id="1-0">0.0</td><td id="1-1">0.0</td><td id="1-2">0.0</td></tr>
+            <tr><td>Post 3</td><td id="2-0">0.0</td><td id="2-1">0.0</td><td id="2-2">0.0</td></tr>
+            <tr><td>Post 4</td><td id="3-0">0.0</td><td id="3-1">0.0</td><td id="3-2">0.0</td></tr>
+            <tr><td>Post 5</td><td id="4-0">0.0</td><td id="4-1">0.0</td><td id="4-2">0.0</td></tr>
+            <tr><td>Post 6</td><td id="5-0">0.0</td><td id="5-1">0.0</td><td id="5-2">0.0</td></tr>
+            <tr class="last"><td>Total</td><td id="0">0.0</td><td id="1">0.0</td><td id="2">0.0</td></tr>
+        </table>
+
+        <h2>Kort over Nybrogård</h2>
+        <p>Jeres færd er ikke garanteret at blive inde for kortet. Fat mod, og udforsk løs!</p>
+        <img src="{{ kort }}">
+    </body>
+</html>
