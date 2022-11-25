@@ -47,14 +47,15 @@
             let showHint = true;
             let currentTask;
             let groupCode;
+            let postCode;
 
             const hints = [
-                "Soduko.",
-                "Du vil sætte en kano i vandet, men ender som en af drengene på bænken.",
-                "Når du står på toppen, kan du fra sikker afstand betragte både vores alle sammens statsminister 🌹🌹🌹 og bølgen blå 🌊🌊🌊",
-                "Det rygtes, at der har været serveret stegt flæsk med persillesovs ad libitum.",
-                "Du har fundet nogle tal, men forstår ej deres mening: 55.772614 12.471508.",
-                'Stedet der aldrig skuffer med <span class="emph">10</span> shots om fredagen.',
+                "<p>Sudoku.</p>",
+                "<p>Du vil sætte en kano i vandet, men ender som en af drengene på bænken.</p>",
+                "<p>Når du står på toppen, kan du fra sikker afstand betragte både vores alle sammens statsminister 🌹🌹🌹 og bølgen blå 🌊🌊🌊</p>",
+                "<p>Det rygtes, at der har været serveret stegt flæsk med persillesovs ad libitum.</p>",
+                "<p>Du har fundet nogle tal, men forstår ej deres mening: 55.772614 12.471508.</p>",
+                '<p>Stedet der aldrig skuffer med <span class="emph">10</span> shots om fredagen.</p>',
             ];
 
             window.onload = () => {
@@ -62,8 +63,15 @@
                 document.getElementById("group-code").oninput = (event) => {
                     groupCode = Number.parseInt(event.target.value);
                 };
-
                 document.getElementById("log-in").onclick = logIn;
+
+
+                document.getElementById("post-code").value = null;
+                document.getElementById("post-code").oninput = (event) => {
+                    postCode = Number.parseInt(event.target.value);
+                };
+                document.getElementById("submit-post-code").onclick = atPost;
+
                 document.getElementById("update").onclick = updateScores;
 
                 updateVisibility();
@@ -79,7 +87,7 @@
 
                 if (showHint) {
                     setVisible(document.getElementById("if-hint"), true);
-                    document.getElementById("if-hint").innerHTML = "<p>" + hints[currentTask] + "</p>";
+                    document.getElementById("hint").innerHTML = hints[currentTask];
                 } else {
                     setVisible(document.getElementById("if-hint"), false);
                     setVisible(document.getElementById(`task-${currentTask}`), true);
@@ -122,35 +130,61 @@
 
                 updateVisibility();
             };
+
+            const atPost = async () => {
+                const response = await request(`/at-post?group=${groupCode}&post-code=${postCode}`);
+
+                if (response) {
+                    showHint = response.show_hint;
+                    currentTask = response.current_post;
+                }
+
+                updateVisibility();
+            };
         </script>
     </head>
 
     <body>
         <h1>Skattejagt</h1>
         <div id="if-not-logged-in">
-            <p>Indtast jeres gruppes kode her:</p>
-            <input type="text" id="group-code">
+            <input type="text" placeholder="Gruppens kode" id="group-code">
             <button id="log-in">Log ind</button>
         </div>
         <div id="if-logged-in">
-            <div id="if-hint"></div>
+            <div id="if-hint">
+                <div id="hint"></div>
+                <input type="text" placeholder="Postens kode" id="post-code">
+                <button id="submit-post-code">Indsend kode</button>
+            </div>
             <div id="task-0">
 
+                <br>
+                <button id="submit-0">Indsend</button>
             </div>
             <div id="task-1">
 
+                <br>
+                <button id="submit-1">Indsend</button>
             </div>
             <div id="task-2">
 
+                <br>
+                <button id="submit-2">Indsend</button>
             </div>
             <div id="task-3">
 
+                <br>
+                <button id="submit-3">Indsend</button>
             </div>
             <div id="task-4">
 
+                <br>
+                <button id="submit-4">Indsend</button>
             </div>
             <div id="task-5">
 
+                <br>
+                <button id="submit-5">Indsend</button>
             </div>
         </div>
 
@@ -173,7 +207,7 @@
         </table>
 
         <h2>Kort over Nybrogård</h2>
-        <p>Jeres færd er ikke garanteret at blive inde for kortet. Fat mod, og udforsk løs!</p>
+        <p>Jeres færd er ikke garanteret at blive inde for kortet &ndash; men fat mod, svende, og så vil lykkens gudinde tilsmile jer, inden aftenen er omme!</p>
         <img src="{{ kort }}">
     </body>
 </html>
