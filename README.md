@@ -6,7 +6,7 @@
     - Søren tager tid og taster deres bedste tid ind (flere forsøg tilladt)
     - Givne point = 5 - 1/4 * deres rekord 
 2. Asgerquiz
-    - 5 multiple choice-spørgsmål
+    - Hvad er Asgers dårligste handel på aktiemarkedet? 
     - Givne point = 1 for hvert rigtigt spørgsmål
 3. Bridgekeeper:  Vis [billede](static/bridgekeeper.jpg)
     - "Stop. Who would cross the Mølleå Bridge must answer me these questions three, ere the other side he see."
