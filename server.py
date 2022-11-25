@@ -56,7 +56,7 @@ def json_endpoint(fun):
 
 @app.get("/")
 def index():
-    return render_template("index.html", kort="static/kort.png")
+    return render_template("index.html", kort="static/kort.png", bridgekeeper="static/bridgekeeper.jpg")
 
 @app.get("/log-in")
 @json_endpoint

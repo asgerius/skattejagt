@@ -48,6 +48,19 @@
             let currentTask;
             let groupCode;
             let postCode;
+            let snoerrebaandstid;
+
+            let post1CorrectIndex = [1, 4, 2, 4, 3];
+            let post1Answered = [-1, -1, -1, -1, -1];
+
+            let swallow;
+
+            let post3CorrectIndex = [4, 3, 2, 1, 0];
+            let post3Answered = [-1, -1, -1, -1, -1];
+
+            let stafettid;
+
+            let gpu;
 
             const hints = [
                 "<p>Sudoku.</p>",
@@ -74,6 +87,50 @@
 
                 document.getElementById("update").onclick = updateScores;
 
+                // Submit buttons
+                document.getElementById("submit-0").onclick = post0Submit;
+                document.getElementById("submit-1").onclick = post1Submit;
+                document.getElementById("submit-2").onclick = post2Submit;
+                document.getElementById("submit-3").onclick = post3Submit;
+                document.getElementById("submit-4").onclick = post4Submit;
+                document.getElementById("submit-5").onclick = post5Submit;
+
+                // Post 0
+                document.getElementById("snoerrebaand").value = null;
+                document.getElementById("snoerrebaand").oninput = (event) => {
+                    snoerrebaandstid = Number.parseFloat(event.target.value);
+                };
+
+                // Post 1
+                for (let i = 0; i < 5; ++ i) {
+                    const select = document.getElementById(`task-1${i}-select`);
+                    post1Answered[i] = select.selectedIndex;
+                }
+
+                // Post 2
+                document.getElementById("swallow").value = null;
+                document.getElementById("swallow").oninput = (event) => {
+                    swallow = event.target.value;
+                };
+
+                // Post 3
+                for (let i = 0; i < 5; ++ i) {
+                    const select = document.getElementById(`task-3${i}-select`);
+                    post3Answered[i] = select.selectedIndex;
+                }
+
+                // Post 4
+                document.getElementById("stafet").value = null;
+                document.getElementById("stafet").oninput = (event) => {
+                    stafettid = Number.parseFloat(event.target.value);
+                };
+
+                // Post 5
+                document.getElementById("gpu").value = null;
+                document.getElementById("gpu").oninput = (event) => {
+                    gpu = Number.parseFloat(event.target.value);
+                };
+
                 updateVisibility();
             };
 
@@ -82,7 +139,7 @@
                 setVisible(document.getElementById("if-logged-in"), loggedIn);
 
                 for (let i = 0; i < 6; ++ i) {
-                    setVisible(document.getElementById(`task-${i}`), false);
+                    setVisible(document.getElementById(`task-${i}`), currentTask === i && !showHint);
                 }
 
                 if (showHint) {
@@ -109,11 +166,13 @@
             const updateScores = async () => {
                 const scores = await request("/scores");
                 const total = [];
-                for (let i = 0; i < 6; ++ i) {
-                    total.push(0)
-                    for (j = 0; j < 3; ++ j) {
-                        total[i] += scores[i][j];
-                        document.getElementById(`${i}-${j}`).innerText = scores[i][j].toFixed(1);
+                for (let i = 0; i < 3; ++ i) {
+                    total.push(0);
+                    for (j = 0; j < 6; ++ j) {
+                        total[i] += scores[j][i];
+                        if (scores[j][i] > 0) {
+                            document.getElementById(`${j}-${i}`).innerText = scores[j][i].toFixed(1);
+                        }
                     }
                 }
                 for (let i = 0; i < 3; ++ i) {
@@ -141,6 +200,113 @@
 
                 updateVisibility();
             };
+
+            const post0Submit = async () => {
+                // Fuld score på 20 sek eller mindre
+                let score = 5 * 20 / snoerrebaandstid;
+                score = Math.min(score, 5);
+                const response = await request(`/submit?group=${groupCode}&score=${score}`);
+                if (response) {
+                    showHint = response.show_hint;
+                    currentTask = response.current_post;
+                }
+
+                document.getElementById("post-code").value = null;
+                await updateScores();
+                updateVisibility();
+            };
+
+            const post1Submit = async () => {
+                let score = 0;
+                for (let i = 0; i < 5; ++ i) {
+                    if (post1Answered[i] === post1CorrectIndex[i]) {
+                        ++ score;
+                    }
+                }
+                score = Math.min(score, 5);
+
+                const response = await request(`/submit?group=${groupCode}&score=${score}`);
+                if (response) {
+                    showHint = response.show_hint;
+                    currentTask = response.current_post;
+                }
+
+                document.getElementById("post-code").value = null;
+                await updateScores();
+                updateVisibility();
+            };
+
+            const post2Submit = async () => {
+                let score = 5 * 2 / 3;
+                if (swallow.toLowerCase().includes("european")) {
+                    score += 5 / 6;
+                }
+                if (swallow.toLowerCase().includes("african")) {
+                    score += 5 / 6;
+                }
+                score = Math.min(score, 5);
+
+                const response = await request(`/submit?group=${groupCode}&score=${score}`);
+                if (response) {
+                    showHint = response.show_hint;
+                    currentTask = response.current_post;
+                }
+
+                document.getElementById("post-code").value = null;
+                await updateScores();
+                updateVisibility();
+            };
+
+            const post3Submit = async () => {
+                let score = 0;
+                for (let i = 0; i < 5; ++ i) {
+                    if (post3Answered[i] === post3CorrectIndex[i]) {
+                        ++ score;
+                    }
+                }
+                score = Math.min(score, 5);
+
+                const response = await request(`/submit?group=${groupCode}&score=${score}`);
+                if (response) {
+                    showHint = response.show_hint;
+                    currentTask = response.current_post;
+                }
+
+                document.getElementById("post-code").value = null;
+                await updateScores();
+                updateVisibility();
+            };
+
+            const post4Submit = async () => {
+                // Fuld score på 20 sek eller mindre
+                let score = 5 * 20 / stafettid;
+                score = Math.min(score, 5);
+                const response = await request(`/submit?group=${groupCode}&score=${score}`);
+                if (response) {
+                    showHint = response.show_hint;
+                    currentTask = response.current_post;
+                }
+
+                document.getElementById("post-code").value = null;
+                await updateScores();
+                updateVisibility();
+            };
+
+            const post5Submit = async () => {
+                // Fuld score på 20 sek eller mindre
+                let score = 5 - 5 * Math.abs(gpu - 73000) / 73000;
+                score = Math.min(score, 5);
+
+                const response = await request(`/submit?group=${groupCode}&score=${score}`);
+                if (response) {
+                    showHint = response.show_hint;
+                    currentTask = response.current_post;
+                }
+
+                document.getElementById("post-code").value = null;
+                await updateScores();
+                updateVisibility();
+            };
         </script>
     </head>
 
@@ -154,36 +320,121 @@
             <div id="if-hint">
                 <div id="hint"></div>
                 <input type="text" placeholder="Postens kode" id="post-code">
-                <button id="submit-post-code">Indsend kode</button>
+                <button id="submit-post-code">Indsend</button>
             </div>
             <div id="task-0">
-
-                <br>
+                <p>Ingen børnefødselsdag uden indtagelse af snørrebånd. Hvad er den allerhurtigste tid, som jeres allerhurtigste snørrebåndsspisere kan opnå? Tiden udfyldes af Søren Winkel Holmius den Mindre.</p>
+                <input id="snoerrebaand">
                 <button id="submit-0">Indsend</button>
             </div>
             <div id="task-1">
-
-                <br>
+                <p>Hvad er Asgers værste handel på aktiemarkedet?</p>
+                <select id="task-10-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <p>Hvad er Asgers værste handel på aktiemarkedet?</p>
+                <select id="task-11-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <p>Hvad er Asgers værste handel på aktiemarkedet?</p>
+                <select id="task-12-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <p>Hvad er Asgers værste handel på aktiemarkedet?</p>
+                <select id="task-13-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <p>Hvad er Asgers værste handel på aktiemarkedet?</p>
+                <select id="task-14-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <br><br>
                 <button id="submit-1">Indsend</button>
             </div>
             <div id="task-2">
-
-                <br>
+                <img src="{{ bridgekeeper }}">
+                <p>Stop. Who would cross the Mølleå Bridge must answer me these questions three, ere the other side he see.</p>
+                <p>What… is your name?</p>
+                <input type="text">
+                <p>What… is your quest?</p>
+                <input type="text">
+                <p>What… is the air-speed velocity of an unladen swallow?</p>
+                <input type="text" id="swallow">
+                <br><br>
                 <button id="submit-2">Indsend</button>
             </div>
             <div id="task-3">
-
-                <br>
+                <p>Hvad er Texas' nationalret?</p>
+                <select id="task-30-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <p>Hvad er Texas' nationalret?</p>
+                <select id="task-31-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <p>Hvad er Texas' nationalret?</p>
+                <select id="task-32-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <p>Hvad er Texas' nationalret?</p>
+                <select id="task-33-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <p>Hvad er Texas' nationalret?</p>
+                <select id="task-34-select">
+                    <option>GME</option>
+                    <option>Lithium Americas Corp.</option>
+                    <option>Dogecoin</option>
+                    <option>Tesla</option>
+                    <option>Novo Nordisk</option>
+                </select>
+                <br><br>
                 <button id="submit-3">Indsend</button>
             </div>
             <div id="task-4">
-
-                <br>
+                <p>Asger er kommet sent i gang med øl, men har gjort sit for at indhente alle de små grønne venner, han missede. Han kommer til jer og giver jer muligheden for at vinde Danmarksmesterskabet i ølstafet. Asgerius den Store indtaster selv resultatet.</p>
+                <input id="stafet">
                 <button id="submit-4">Indsend</button>
             </div>
             <div id="task-5">
-
-                <br>
+                <p>Asger har igennem sit studie flittigt brugt grafikkortene i DTU's åbne supercomputer til mere eller mindre seriøse opgaver. Hvor meget ville det have kostet, hvis Asger selv havde skullet betale for al hans køretid på grafikkort?</p>
+                <input id="gpu">
                 <button id="submit-5">Indsend</button>
             </div>
         </div>
@@ -197,12 +448,12 @@
                 <th>Gruppe 2</th>
                 <th>Gruppe 3</th>
             </tr>
-            <tr><td>Post 1</td><td id="0-0">0.0</td><td id="0-1">0.0</td><td id="0-2">0.0</td></tr>
-            <tr><td>Post 2</td><td id="1-0">0.0</td><td id="1-1">0.0</td><td id="1-2">0.0</td></tr>
-            <tr><td>Post 3</td><td id="2-0">0.0</td><td id="2-1">0.0</td><td id="2-2">0.0</td></tr>
-            <tr><td>Post 4</td><td id="3-0">0.0</td><td id="3-1">0.0</td><td id="3-2">0.0</td></tr>
-            <tr><td>Post 5</td><td id="4-0">0.0</td><td id="4-1">0.0</td><td id="4-2">0.0</td></tr>
-            <tr><td>Post 6</td><td id="5-0">0.0</td><td id="5-1">0.0</td><td id="5-2">0.0</td></tr>
+            <tr><td>Post 1</td><td id="0-0"></td><td id="0-1"></td><td id="0-2"></td></tr>
+            <tr><td>Post 2</td><td id="1-0"></td><td id="1-1"></td><td id="1-2"></td></tr>
+            <tr><td>Post 3</td><td id="2-0"></td><td id="2-1"></td><td id="2-2"></td></tr>
+            <tr><td>Post 4</td><td id="3-0"></td><td id="3-1"></td><td id="3-2"></td></tr>
+            <tr><td>Post 5</td><td id="4-0"></td><td id="4-1"></td><td id="4-2"></td></tr>
+            <tr><td>Post 6</td><td id="5-0"></td><td id="5-1"></td><td id="5-2"></td></tr>
             <tr class="last"><td>Total</td><td id="0">0.0</td><td id="1">0.0</td><td id="2">0.0</td></tr>
         </table>
 
