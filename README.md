@@ -2,9 +2,9 @@
 
 ## Poster
 1. Hold-spisning af snørrebånd på tid
-    - "Ingen børnefødselsdag uden indtagelse af snørrebånd. Alle holdmedlemmer skal have guffet båndet i sig, så nu handler det om at have det stærkeste, svageste led"
-    - Søren tager tid og taster deres tid ind
-    - Givne point = 4 for vinder, 2 for nummer 2 og 1 for nummer 3 
+    - "Ingen børnefødselsdag uden indtagelse af snørrebånd. Hvad er den allerhurtigste tid, som jeres allerhurtigste snørrebåndsspisere kan opnå? "
+    - Søren tager tid og taster deres bedste tid ind (flere forsøg tilladt)
+    - Givne point = 5 - 1/4 * deres rekord 
 2. Asgerquiz
     - 5 multiple choice-spørgsmål
     - Givne point = 1 for hvert rigtigt spørgsmål
@@ -22,8 +22,8 @@
     - Givne point = 1 for hvert rigtigt spørgsmål
 5. Hurtigste stafetbund.
     - "Asger er kommet sent i gang med øl, men har gjort sit for at indhente alle de små grønne venner, han missede. Han kommer til jer og giver jer muligheden for at vinde danmarksmesterskabet i ølstafet. Tast ikke jeres svar ind selv."
-    - Asger tager tid og taster deres tid ind
-    - Givne point = 4 for vinder, 2 for nummer 2 og 1 for nummer 3 
+    - Asger tager tid og taster deres tid ind (flere forsøg tilladt)
+    - Givne point = 5 - 1/4 * deres rekord
 6. Asgerspørgsmål: 
     - "Asger har igennem sit studie flittigt brugt grafikkortene i DTU's åbne supercomputer til mere eller mindre seriøse opgaver. Hvor meget ville det have kostet, hvis Asger selv havde skullet betale for al hans køretid på grafikkort?"
     - Korrekt 73000
