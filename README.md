@@ -5,7 +5,7 @@
 2. Asgerquiz
     - Multiple choice
     - Tal
-3. Vis ![billede][static/bridgekeeper.jpg]
+3. Vis ![billede](static/bridgekeeper.jpg)
     - "Stop. Who would cross the Mølleå Bridge must answer me these questions three, ere the other side he see."
     - "What… is your name?"
       - Teksboks: Alle svar er rigtige
