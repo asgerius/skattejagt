@@ -18,7 +18,18 @@
       - Tekstboks: man får rigtigt, hvis det ligger tæt nok på citatet. Måske skal vi bare bare køre `"african" in answer.lower() or "european" in answer.lower()`
     - Givne point = 5 / 3 * antal rigtige 
 4. Quiz om Texas
-    - 5 multiple choice-spørgsmål
+    - Hvad er den statens officielle madret? 
+        - Texas Barbecue Brisket
+        - Chili Con Carne (*)
+        - Tacos
+    - Hvad er Texas' kaldenavn?
+        - Lone Star State (*)
+        - Golden State
+        - Magnolia State
+    - I Texas skal Asger arbejde for Lockheed Martin. De har en afdeling for avanceret teknologi, hvor tidligere ansatte har beskrevet teknologien som "længere fremme end Star Wars". Hvad hedder den afdeling?
+        - Skunk Works ("Stinkdyrholdet")
+        - Piccard Party
+        - 
     - Givne point = 1 for hvert rigtigt spørgsmål
 5. Hurtigste stafetbund.
     - "Asger er kommet sent i gang med øl, men har gjort sit for at indhente alle de små grønne venner, han missede. Han kommer til jer og giver jer muligheden for at vinde danmarksmesterskabet i ølstafet. Tast ikke jeres svar ind selv."
