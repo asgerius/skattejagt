@@ -53,7 +53,7 @@
             let post1CorrectIndex = [1, 4, 2, 4, 3];
             let post1Answered = [-1, -1, -1, -1, -1];
 
-            let swallow;
+            let swallow = "";
 
             let post3CorrectIndex = [4, 3, 2, 1, 0];
             let post3Answered = [-1, -1, -1, -1, -1];
@@ -66,7 +66,7 @@
                 '<h2>Hint til post 1</h2><p>Gå til nummer SUDOKU og søg bag rør.</p>',
                 '<h2>Hint til post 2</h2><p>Du vil sætte en kano i vandet og går hen til der, hvor man gør det. Da du kommer frem, ender du som en af drengene på bænken.</p>',
                 '<h2>Hint til post 3</h2><p>Når du står på toppen af denne bueformede konstruktion, kan du fra sikker afstand betragte både vores alle sammens statsminister 🌹🌹🌹 og bølgen blå 🌊🌊🌊. (Hvis du tror, du er det rigtige sted, men der er nogle møgunger, der har pillet posten ned, så ring lige pls).</p>',
-                '<h2>Hint til post 4</h2><p>Gå til dette lokale hygested, hvor det rygtes, at de serverer stegt flæsk med persillesovs ad libitum. Stil dig, så du betragter bænkene fra stien og husk altid at læse P reglementet - grundigt!</p>',
+                '<h2>Hint til post 4</h2><p>Gå til dette lokale hygested, hvor det rygtes, at de serverer stegt flæsk med persillesovs ad libitum. Stil dig, så du betragter bænkene fra stien og husk altid at læse P-reglementet - grundigt!</p>',
                 '<h2>Hint til post 5</h2><p>Du har fundet nogle tal, men forstår ej deres mening: 55.772614 12.471508.</p>',
                 '<h2>Hint til post 6</h2><p>Stedet der aldrig skuffer med <span class="emph">10</span> shots om fredagen. Når du er der, sætter du dig på bænken ude foran og hygger lidt.</p>',
             ];
@@ -131,6 +131,7 @@
                     gpu = Number.parseFloat(event.target.value);
                 };
 
+                updateScores();
                 updateVisibility();
             };
 
@@ -412,7 +413,7 @@
             </div>
             <div id="task-3">
                 <h2>Opgave til post 4 </h2>
-                <p>Mens Asger er i Texas flytter der en stakkel ind, der skal leve i hans svinesti. Hvad hedder hun?</p>
+                <p>Mens Asger er i Texas, flytter der en stakkel ind, der skal leve i hans svinesti. Hvad hedder hun?</p>
                 <select id="task-30-select">
                     <option>Camilla</option>
                     <option>Eper</option>
@@ -430,7 +431,7 @@
                 </select>
                 <p>Hvad skal Asger arbejde på for det firma?</p>
                 <select id="task-32-select">
-                    <option>Produktion af sprængstoffer for den amerikanske hær.</option>
+                    <option>Produktion af sprængstoffer for den amerikanske hær</option>
                     <option>Vejrmodeller</option>
                     <option>Jetfly</option>
                     <option>Kunstig intelligens til at opdage medarbejdere, der ikke laver nok</option>
