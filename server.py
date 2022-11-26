@@ -101,5 +101,5 @@ def at_post():
 
 if __name__ == "__main__":
     log.configure("server.log")
-    app.run(host="0.0.0.0", port=6969, debug=False, processes=1, threaded=False)
+    app.run(host="0.0.0.0", port=6969, debug=False, processes=1, threaded=True)
 
