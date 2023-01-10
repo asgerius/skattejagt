@@ -6,9 +6,8 @@ import numpy as np
 from flask import Flask, request, jsonify, render_template
 from flask_restful import Api
 from flask_cors import CORS
-from pelutils import log, DataStorage
+from pelutils import log
 from dataclasses import dataclass
-from pprint import pformat
 
 
 app = Flask(__name__)
@@ -17,23 +16,24 @@ CORS(app)
 
 app.config["UPLOAD_FOLDER"] = "static"
 
-scores = np.zeros((6, 3))  # [post, group]
-submitted = np.zeros((6, 3))
+scores = np.zeros((8, 4))  # [post, group]
+submitted = np.zeros((8, 4))
 
 @dataclass
 class GroupStatus:
     current_post: int
     show_hint: bool
 
-post_codes = [483, 548, 194, 420, 849, 392]
+post_codes = [345, 567, 498, 728, 823, 241, 698, 978]
 
 def code_to_group(code: int) -> int:
-    return [391, 498, 193].index(code)
+    return [391, 401, 194, 327].index(code)
 
 groups = [
     GroupStatus(0, True),
     GroupStatus(2, True),
     GroupStatus(4, True),
+    GroupStatus(6, True),
 ]
 
 def json_endpoint(fun):
@@ -81,7 +81,7 @@ def submit():
     submitted[group.current_post, group_no] = True
     scores[group.current_post, group_no] = score
 
-    group.current_post = (group.current_post + 1) % 6
+    group.current_post = (group.current_post + 1) % 8
     group.show_hint = True
 
     return group
@@ -101,5 +101,5 @@ def at_post():
 
 if __name__ == "__main__":
     log.configure("server.log")
-    app.run(host="0.0.0.0", port=6969, debug=False, processes=1, threaded=True)
+    app.run(host="0.0.0.0", port=6969, debug=True, processes=1, threaded=True)
 

@@ -48,28 +48,18 @@
             let currentTask;
             let groupCode;
             let postCode;
-            let snoerrebaandstid;
 
-            let post1CorrectIndex = [1, 4, 2, 4, 3];
-            let post1Answered = [-1, -1, -1, -1, -1];
-
-            let swallow = "";
-
-            let post3CorrectIndex = [4, 3, 2, 1, 0];
-            let post3Answered = [-1, -1, -1, -1, -1];
-
-            let stafettid;
-
-            let gpu;
-
-            const hints = [
-                '<h2>Hint til post 1</h2><p>Gå til nummer SUDOKU og søg bag rør.</p>',
-                '<h2>Hint til post 2</h2><p>Du vil sætte en kano i vandet og går hen til der, hvor man gør det. Da du kommer frem, ender du som en af drengene på bænken.</p>',
-                '<h2>Hint til post 3</h2><p>Når du står på toppen af denne bueformede konstruktion, kan du fra sikker afstand betragte både vores alle sammens statsminister 🌹🌹🌹 og bølgen blå 🌊🌊🌊. (Hvis du tror, du er det rigtige sted, men der er nogle møgunger, der har pillet posten ned, så ring lige pls).</p>',
-                '<h2>Hint til post 4</h2><p>Gå til dette lokale hygested, hvor det rygtes, at de serverer stegt flæsk med persillesovs ad libitum. Stil dig, så du betragter bænkene fra stien og husk altid at læse P-reglementet - grundigt!</p>',
-                '<h2>Hint til post 5</h2><p>Du har fundet nogle tal, men forstår ej deres mening: 55.772614 12.471508.</p>',
-                '<h2>Hint til post 6</h2><p>Stedet der aldrig skuffer med <span class="emph">10</span> shots om fredagen. Når du er der, sætter du dig på bænken ude foran og hygger lidt.</p>',
-            ];
+            let post0Values = {
+                starsignNumber: null,
+                linesStarsign: null,
+                whereStarsign: null,
+                moonsign: null,
+                otherSign: null,
+            };
+            let post1Value;
+            let post5Value;
+            let post6Value;
+            let post7Value;
 
             window.onload = () => {
                 document.getElementById("group-code").value = null;
@@ -94,44 +84,44 @@
                 document.getElementById("submit-3").onclick = post3Submit;
                 document.getElementById("submit-4").onclick = post4Submit;
                 document.getElementById("submit-5").onclick = post5Submit;
+                document.getElementById("submit-6").onclick = post6Submit;
+                document.getElementById("submit-7").onclick = post7Submit;
 
                 // Post 0
-                document.getElementById("snoerrebaand").value = null;
-                document.getElementById("snoerrebaand").oninput = (event) => {
-                    snoerrebaandstid = Number.parseFloat(event.target.value);
-                };
+                document.getElementById("input-0-0").value = null;
+                document.getElementById("input-0-0").oninput = (event) => { post0Values.starsignNumber = Number.parseFloat(event.target.value); };
+                document.getElementById("input-0-1").value = null;
+                document.getElementById("input-0-1").oninput = (event) => { post0Values.linesStarsign = event.target.value; };
+                document.getElementById("input-0-2").value = null;
+                document.getElementById("input-0-2").oninput = (event) => { post0Values.whereStarsign = event.target.value; };
+                document.getElementById("input-0-3").value = null;
+                document.getElementById("input-0-3").oninput = (event) => { post0Values.moonsign = event.target.value; };
+                document.getElementById("input-0-4").value = null;
+                document.getElementById("input-0-4").oninput = (event) => { post0Values.otherSign = event.target.value; };
 
                 // Post 1
-                for (let i = 0; i < 5; ++ i) {
-                    const select = document.getElementById(`task-1${i}-select`);
-                    post1Answered[i] = select.selectedIndex;
-                }
+                document.getElementById("input-1").value = null;
+                document.getElementById("input-1").oninput = (event) => { post1Value = event.target.value.toLowerCase(); };
 
                 // Post 2
-                document.getElementById("swallow").value = null;
-                document.getElementById("swallow").oninput = (event) => {
-                    swallow = event.target.value;
-                };
 
                 // Post 3
-                for (let i = 0; i < 5; ++ i) {
-                    const select = document.getElementById(`task-3${i}-select`);
-                    post3Answered[i] = select.selectedIndex;
-                }
 
                 // Post 4
-                document.getElementById("stafet").value = null;
-                document.getElementById("stafet").oninput = (event) => {
-                    stafettid = Number.parseFloat(event.target.value);
-                };
 
                 // Post 5
-                document.getElementById("gpu").value = null;
-                document.getElementById("gpu").oninput = (event) => {
-                    gpu = Number.parseFloat(event.target.value);
-                };
+                document.getElementById("input-5").value = null;
+                document.getElementById("input-5").oninput = (event) => { post5Value = Number.parseInt(event.target.value); };
 
-                // updateScores();
+                // Post 6
+                document.getElementById("input-6").value = null;
+                document.getElementById("input-6").oninput = (event) => { post6Value = Number.parseFloat(event.target.value); };
+
+                // Post 7
+                document.getElementById("input-7").value = null;
+                document.getElementById("input-7").oninput = (event) => { post7Value = event.target.value.toLowerCase(); };
+
+                updateScores();
                 updateVisibility();
             };
 
@@ -139,13 +129,13 @@
                 setVisible(document.getElementById("if-not-logged-in"), !loggedIn);
                 setVisible(document.getElementById("if-logged-in"), loggedIn);
 
-                for (let i = 0; i < 6; ++ i) {
+                for (let i = 0; i < 8; ++ i) {
                     setVisible(document.getElementById(`task-${i}`), currentTask === i && !showHint);
                 }
 
                 if (showHint) {
                     setVisible(document.getElementById("if-hint"), true);
-                    document.getElementById("hint").innerHTML = hints[currentTask];
+                    document.getElementById("hint").innerHTML = `<p>Gå til post ${currentTask % 8 + 1}</p>`
                 } else {
                     setVisible(document.getElementById("if-hint"), false);
                     setVisible(document.getElementById(`task-${currentTask}`), true);
@@ -167,16 +157,16 @@
             const updateScores = async () => {
                 const scores = await request("/scores");
                 const total = [];
-                for (let i = 0; i < 3; ++ i) {
+                for (let i = 0; i < 4; ++ i) {
                     total.push(0);
-                    for (j = 0; j < 6; ++ j) {
+                    for (j = 0; j < 8; ++ j) {
                         total[i] += scores[j][i];
                         if (scores[j][i] > 0) {
                             document.getElementById(`${j}-${i}`).innerText = scores[j][i].toFixed(1);
                         }
                     }
                 }
-                for (let i = 0; i < 3; ++ i) {
+                for (let i = 0; i < 4; ++ i) {
                     document.getElementById(`${i}`).innerText = total[i].toFixed(1);
                 }
             };
@@ -204,115 +194,67 @@
 
             const post0Submit = async () => {
                 // Fuld score på 20 sek eller mindre
-                let score = 5 * 20 / snoerrebaandstid;
-                score = Math.min(score, 5);
-                score = Math.max(score, 0);
-                const response = await request(`/submit?group=${groupCode}&score=${score}`);
-                if (response) {
-                    showHint = response.show_hint;
-                    currentTask = response.current_post;
-                }
-
-                document.getElementById("post-code").value = null;
-                await updateScores();
-                updateVisibility();
+                let score = 0;
+                score += post0Values.starsignNumber === 12;
+                score += post0Values.linesStarsign.toLowerCase().includes("vandmand");
+                score += post0Values.whereStarsign.toLowerCase().includes("lufttegn");
+                score += post0Values.moonsign.toLowerCase().includes("skytte");
+                score += post0Values.otherSign.toLowerCase().includes("vædder");
+                await submitScore(score);
             };
 
             const post1Submit = async () => {
-                for (let i = 0; i < 5; ++ i) {
-                    const select = document.getElementById(`task-1${i}-select`);
-                    post1Answered[i] = select.selectedIndex;
-                }
-
                 let score = 0;
-                for (let i = 0; i < 5; ++ i) {
-                    if (post1Answered[i] === post1CorrectIndex[i]) {
-                        ++ score;
-                    }
+                if (post1Value.includes("writer") || post1Value.includes("skrive")) {
+                    score += 2.5;
                 }
-                score = Math.min(score, 5);
-                score = Math.max(score, 0);
-
-                const response = await request(`/submit?group=${groupCode}&score=${score}`);
-                if (response) {
-                    showHint = response.show_hint;
-                    currentTask = response.current_post;
+                if (post1Value.includes("block") || post1Value.includes("blok")) {
+                    score += 2.5;
                 }
-
-                document.getElementById("post-code").value = null;
-                await updateScores();
-                updateVisibility();
+                await submitScore(score);
             };
 
             const post2Submit = async () => {
-                let score = 5 * 2 / 3;
-                if (swallow.toLowerCase().includes("european")) {
-                    score += 5 / 6;
-                }
-                if (swallow.toLowerCase().includes("african")) {
-                    score += 5 / 6;
-                }
-                score = Math.min(score, 5);
-                score = Math.max(score, 0);
-
-                const response = await request(`/submit?group=${groupCode}&score=${score}`);
-                if (response) {
-                    showHint = response.show_hint;
-                    currentTask = response.current_post;
-                }
-
-                document.getElementById("post-code").value = null;
-                await updateScores();
-                updateVisibility();
+                const score = 5 * (document.getElementById("task-2-select").selectedIndex === 0);
+                await submitScore(score);
             };
 
             const post3Submit = async () => {
-                for (let i = 0; i < 5; ++ i) {
-                    const select = document.getElementById(`task-3${i}-select`);
-                    post3Answered[i] = select.selectedIndex;
-                }
                 let score = 0;
-                for (let i = 0; i < 5; ++ i) {
-                    if (post3Answered[i] === post3CorrectIndex[i]) {
-                        ++ score;
-                    }
+                if (document.getElementById("task-3-0-select").selectedIndex === 1) {
+                    score += 2.5;
                 }
-                score = Math.min(score, 5);
-                score = Math.max(score, 0);
-
-                const response = await request(`/submit?group=${groupCode}&score=${score}`);
-                if (response) {
-                    showHint = response.show_hint;
-                    currentTask = response.current_post;
+                if (document.getElementById("task-3-1-select").selectedIndex === 7) {
+                    score += 2.5;
                 }
-
-                document.getElementById("post-code").value = null;
-                await updateScores();
-                updateVisibility();
+                await submitScore(score);
             };
 
             const post4Submit = async () => {
-                // Fuld score på 20 sek eller mindre
-                let score = 5 * 20 / stafettid;
-                score = Math.min(score, 5);
-                score = Math.max(score, 0);
-                const response = await request(`/submit?group=${groupCode}&score=${score}`);
-                if (response) {
-                    showHint = response.show_hint;
-                    currentTask = response.current_post;
-                }
-
-                document.getElementById("post-code").value = null;
-                await updateScores();
-                updateVisibility();
+                const score = 5 * (document.getElementById("task-4-select").selectedIndex === 5);
+                await submitScore(score);
             };
 
             const post5Submit = async () => {
-                // Fuld score på 20 sek eller mindre
-                let score = 5 - 5 * Math.abs(gpu - 73000) / 73000;
+                const numItems = 10;
+                const score = 5 * post5Value / numItems;
+                await submitScore(score);
+            };
+
+            const post6Submit = async () => {
+                const value = Math.max(10, post6Value) - 10;
+                const score = 5 * Math.exp(-value / 10);
+                await submitScore(score);
+            };
+
+            const post7Submit = async () => {
+                const score = 5 * post7Value.includes("asger");
+                await submitScore(score);
+            };
+
+            const submitScore = async (score) => {
                 score = Math.min(score, 5);
                 score = Math.max(score, 0);
-
                 const response = await request(`/submit?group=${groupCode}&score=${score}`);
                 if (response) {
                     showHint = response.show_hint;
@@ -322,22 +264,14 @@
                 document.getElementById("post-code").value = null;
                 await updateScores();
                 updateVisibility();
-            };
+            }
         </script>
     </head>
 
     <body>
         <h1>Skattejagt</h1>
-        <p>
-            I nød kan man altid foretage en nødopringning; men husk! Opringer er ikke gratis, og der kvitteres med to strafpoint for hver oprinding, uanset grund og udfald.
-        </p>
-        <p>
-            Asger: <a href="tel:004550661014">50 66 10 14</a>
-            <br>
-            Søren: <a href="tel:004529828841">29 82 88 41</a>
-        </p>
         <div id="if-not-logged-in">
-            <input type="text" placeholder="Gruppens kode" id="group-code">
+            <input type="text" placeholder="Holdets kode" id="group-code">
             <button id="log-in">Log ind</button>
         </div>
         <div id="if-logged-in">
@@ -347,126 +281,123 @@
                 <button id="submit-post-code">Indsend</button>
             </div>
             <div id="task-0">
-                <h2>Opgave til post 1 </h2>
-                <p>Ingen børnefødselsdag uden indtagelse af snørrebånd. Hvad er den allerhurtigste tid, som jeres allerhurtigste snørrebåndsspisere kan opnå? Tiden udfyldes af Søren Winkel Holmius den Mindre.</p>
-                <input id="snoerrebaand">
-                <button id="submit-0">Indsend</button>
+                <h2>Post 1: Stjernetegn</h2>
+                <ol>
+                    <li>
+                        <p>Hvor mange stjernetegn findes der?</p>
+                        <input id="input-0-0">
+                    </li>
+                    <li>
+                        <p>Hvilket stjernetegn er Line?</p>
+                        <input id="input-0-1">
+                    </li>
+                    <li>
+                        <p>Der er luftegn, vandtegn, jordtegn og ildtegn. Hvori placeres Lines stjernetegn?</p>
+                        <input id="input-0-2">
+                    </li>
+                    <li>
+                        <p>Line blev født d. 24 januar 1998. Hvad er hendes månetegn?</p>
+                        <p>Hint: modsætningen til hendes månetegn er tvillingen.</p>
+                        <input id="input-0-3">
+                    </li>
+                    <li>
+                        <p>Line har et andet yndlingstegn end vandmanden. Hvad er det?</p>
+                        <p>Hint: Hun plejer at sige, “water soothes earth like air feeds fire”.</p>
+                        <input id="input-0-4">
+                    </li>
+                </ol>
+                <button id="submit-0">Indsend svar</button>
             </div>
             <div id="task-1">
-                <h2>Opgave til post 2 </h2>
-                <p>Hvad er Asgers værste handel på aktiemarkedet?</p>
-                <select id="task-10-select">
-                    <option>Køb af GME</option>
-                    <option>Salg af Tesla</option>
-                    <option>Salg af Lithium Americas Corp.</option>
-                    <option>Køb af Dogecoin</option>
-                    <option>Køb af Novo Nordisk</option>
-                </select>
-                <p>Hvad er den laveste karakter, som Asger har fået i et færdiggjort fag eller kursus på gymnasiet/universitet?</p>
-                <select id="task-11-select">
-                    <option>12</option>
-                    <option>10</option>
-                    <option>7</option>
-                    <option>02</option>
-                    <option>-3</option>
-                </select>
-                <p>Asger er en stor gourmet. Hvordan har Asger engang lavet mayonnaise?</p>
-                </p>
-                <select id="task-12-select">
-                    <option>Olie + æg</option>
-                    <option>Olie + tis</option>
-                    <option>Olie + sennep + hvidløg</option>
-                    <option>Olie + sennep + æg</option>
-                    <option>Olie + linear algebra</option>
-                </select>
-                <p>For hvilken musiker har Asger for en stund været blandt de mest 0.05 % lyttende fans i verden i følge Spotify?</p>
-                <select id="task-13-select">
-                    <option>Andrew Lloyd Webber</option>
-                    <option>Sømændene</option>
-                    <option>Sabaton</option>
-                    <option>Nephew</option>
-                    <option>ABBA</option>
-                </select>
-                <p>Hvilken af disse ting har Asger ikke bygget i Minecraft?</p>
-                <select id="task-14-select">
-                    <option>En rumfærge</option>
-                    <option>Powerpoint</option>
-                    <option>En lommeregner</option>
-                    <option>Brøndby Stadion</option>
-                    <option>En portal til Nether</option>
-                </select>
-                <br><br>
-                <button id="submit-1">Indsend</button>
+                <h2>Post 2: Line er i krise</h2>
+                <p>Line er en mester til store skriverier og lange tekster, dog har hun haft rigtig svært ved at finde på ideer og spørgsmål til jeres skattejagt. Hun er blevet ramt af noget … men hvad?</p>
+                <p>Se <a href="https://www.youtube.com/watch?v=nK2gVZ5Cj30" target="_blank">traileren</a> til Lines absolutte yndlingsserie for at finde ud af, hvad der ramt hende. Hint: Før 0:43.</p>
+
+                <input id="input-1">
+                <button id="submit-1">Indsend svar</button>
             </div>
             <div id="task-2">
-                <h2>Opgave til post 3</h2>
-                <img src="{{ bridgekeeper }}">
-                <p>Stop. Who would cross the Mølleå Bridge must answer me these questions three, ere the other side he see.</p>
-                <p>What… is your name?</p>
-                <input type="text">
-                <p>What… is your quest?</p>
-                <input type="text">
-                <p>What… is the air-speed velocity of an unladen swallow?</p>
-                <input type="text" id="swallow">
-                <br><br>
-                <button id="submit-2">Indsend</button>
+                <h2>Post 3: Fortabt kærlighed</h2>
+                <p>Line har kastet sin kærlighed på mange flotte mænd, men der nogle som ikke har gengældt den.
+                    Hendes bedste venner har dog altid haft hendes ryg. Da Line holdt fødselsdag og fyldte 15 år,
+                    gav hendes bedste barndomsven Søren, hende et hjemmeredigeret billede i ramme af hende som brud
+                    med en kendis som hun altid har være forelsket i. Hvilken kendis har Line fået sit eget bryllupsbillede med?</p>
+                <select id="task-2-select">
+                    <option>Bradley Cooper</option>
+                    <option>Liam O'connor (L.O.C.)</option>
+                    <option>Ryan Gosling</option>
+                    <option>Justin Bieber</option>
+                </select>
+                <button id="submit-2">Indsend svar</button>
             </div>
             <div id="task-3">
-                <h2>Opgave til post 4 </h2>
-                <p>Mens Asger er i Texas, flytter der en stakkel ind, der skal leve i hans svinesti. Hvad hedder hun?</p>
-                <select id="task-30-select">
-                    <option>Camilla</option>
-                    <option>Eper</option>
-                    <option>Nerea</option>
-                    <option>Janne</option>
-                    <option>Alicia</option>
-                </select>
-                <p>Hvem skal Asger arbejde for i Texas?</p>
-                <select id="task-31-select">
-                    <option>Meta</option>
-                    <option>Boeing</option>
-                    <option>DARPA</option>
-                    <option>Lockheed Martin</option>
-                    <option>In-N-Out Burgers</option>
-                </select>
-                <p>Hvad skal Asger arbejde på for det firma?</p>
-                <select id="task-32-select">
-                    <option>Produktion af sprængstoffer for den amerikanske hær</option>
-                    <option>Vejrmodeller</option>
-                    <option>Jetfly</option>
-                    <option>Kunstig intelligens til at opdage medarbejdere, der ikke laver nok</option>
-                    <option>Server-infrastruktur</option>
-                </select>
-                <p>Hvad er den gennemsnitlige daglige max-temperatur i januar i den by, hvor Asger skal bo?</p>
-                <select id="task-33-select">
-                    <option>5 grader</option>
-                    <option>12 grader</option>
-                    <option>16 grader</option>
-                    <option>19 grader</option>
-                    <option>22 grader</option>
-                </select>
-                <p>Asger har haft nært kendskab til én person fra Texas før. Hvor mødte han vedkommende?</p>
-                <select id="task-34-select">
-                    <option>På druktur i Tyskland</option>
-                    <option>I gruppearbejde på DTU</option>
-                    <option>På Reddit under diskussioner om SpaceX</option>
-                    <option>På Tinder i Sverige</option>
-                    <option>I Georg Mohr-konkurrencen</option>
-                </select>
-                <br><br>
-                <button id="submit-3">Indsend</button>
+                <h2>Post 4: Livets færden</h2>
+                <ol>
+                    <li>
+                        <p>Line er født i Mumbai, Lines mor er født på Amager, men hvor er hendes far født?</p>
+                        <select id="task-3-0-select">
+                            <option>Odense</option>
+                            <option>Jylland</option>
+                            <option>Bornholm</option>
+                            <option>Slesvig-Holsten</option>
+                        </select>
+                    </li>
+                    <li>
+                        <p>Line har gået til mange sports for at udfolde sig selv og søgt efter sin levevej, så hun kunne blive kendt og berømt,
+                            hun fandt den dog aldrig… hvad har Line ikke gået til ELLER forsøgt sig på?</p>
+                        <select id="task-3-1-select">
+                            <option>Ballet</option>
+                            <option>Ridning</option>
+                            <option>Selvforsvar</option>
+                            <option>Håndbold</option>
+                            <option>Fodbold</option>
+                            <option>Svømning</option>
+                            <option>Springgymnastik</option>
+                            <option>Bueskydning</option>
+                            <option>Scenekunst</option>
+                        </select>
+                    </li>
+                </ol>
+                <button id="submit-3">Indsend svar</button>
             </div>
             <div id="task-4">
-                <h2>Opgave til post 5 </h2>
-                <p>Asger er kommet sent i gang med øl, men har gjort sit for at indhente alle de små grønne venner, han missede. Han kommer til jer og giver jer muligheden for at vinde Danmarksmesterskabet i ølstafet. Asgerius den Store indtaster selv resultatet.</p>
-                <input id="stafet">
-                <button id="submit-4">Indsend</button>
+                <h2>Post 5: Skønhed</h2>
+                <p>Line er skøn, rigtig skøn. Fordi hun har mange skønhedspletter! Hvor sidder der ikke en skønhedsplet på Line?</p>
+                <select id="task-4-select">
+                    <option>På indersiden af albuen</option>
+                    <option>Over øjenbrynet</option>
+                    <option>I øjet</option>
+                    <option>I knæhasen</option>
+                    <option>På tåen</option>
+                    <option>På knæet</option>
+                </select>
+                <button id="submit-4">Indsend svar</button>
             </div>
             <div id="task-5">
-                <h2>Opgave til post 6 </h2>
-                <p>Asger har igennem sit studie flittigt brugt grafikkortene i DTU's åbne supercomputer til mere eller mindre seriøse opgaver. Hvor meget ville det have kostet, hvis Asger selv havde skullet betale for al hans køretid på grafikkort?</p>
-                <input id="gpu">
-                <button id="submit-5">Indsend</button>
+                <h2>Post 6: Husk Lines liv</h2>
+                <p>I har tyve sekunder til at huske ting på et billede.</p>
+                <input id="input-5">
+                <button id="submit-5">Indsend svar</button>
+            </div>
+            <div id="task-6">
+                <h2>Post 7: Snørrebåndsspisning</h2>
+                <p>Udvælg jeres ypperste Snørrebåndsspiser! Line tager tid på, hvor hurtigt vedkommende kan spise et snørrebånd.</p>
+                <input id="input-6">
+                <button id="submit-6">Indsend svar</button>
+            </div>
+            <div id="task-7">
+                <h2>Post 8: Til ære for</h2>
+                <p>Hvem kom Line til undsætning og hjalp hende med at sætte skattejagten op? I skal finde fornavnet.</p>
+                <p>Her kommer fem gode sange.</p>
+                <ol>
+                    <li>Arbejd jer frem til sangenes titel.</li>
+                    <li>Navnet findes ved at sætte første bogstav fra hver sangtitel sammen.
+                        Hvis fx sangene er "I'm like a bird" og "Banana pancakes", så er navnet I + B = Ib.
+                    </li>
+                </ol>
+                <p>Held og lykke!</p>
+                <input id="input-7">
+                <button id="submit-7">Indsend svar</button>
             </div>
         </div>
 
@@ -475,17 +406,20 @@
         <table>
             <tr>
                 <th></th>
-                <th>Gruppe 1</th>
-                <th>Gruppe 2</th>
-                <th>Gruppe 3</th>
+                <th>Hold 1</th>
+                <th>Hold 2</th>
+                <th>Hold 3</th>
+                <th>Hold 4</th>
             </tr>
-            <tr><td>Post 1</td><td id="0-0"></td><td id="0-1"></td><td id="0-2"></td></tr>
-            <tr><td>Post 2</td><td id="1-0"></td><td id="1-1"></td><td id="1-2"></td></tr>
-            <tr><td>Post 3</td><td id="2-0"></td><td id="2-1"></td><td id="2-2"></td></tr>
-            <tr><td>Post 4</td><td id="3-0"></td><td id="3-1"></td><td id="3-2"></td></tr>
-            <tr><td>Post 5</td><td id="4-0"></td><td id="4-1"></td><td id="4-2"></td></tr>
-            <tr><td>Post 6</td><td id="5-0"></td><td id="5-1"></td><td id="5-2"></td></tr>
-            <tr class="last"><td>Total</td><td id="0">0.0</td><td id="1">0.0</td><td id="2">0.0</td></tr>
+            <tr><td>Post 1</td><td id="0-0"></td><td id="0-1"></td><td id="0-2"></td><td id="0-3"></td></tr>
+            <tr><td>Post 2</td><td id="1-0"></td><td id="1-1"></td><td id="1-2"></td><td id="1-3"></td></tr>
+            <tr><td>Post 3</td><td id="2-0"></td><td id="2-1"></td><td id="2-2"></td><td id="2-3"></td></tr>
+            <tr><td>Post 4</td><td id="3-0"></td><td id="3-1"></td><td id="3-2"></td><td id="3-3"></td></tr>
+            <tr><td>Post 5</td><td id="4-0"></td><td id="4-1"></td><td id="4-2"></td><td id="4-3"></td></tr>
+            <tr><td>Post 6</td><td id="5-0"></td><td id="5-1"></td><td id="5-2"></td><td id="5-3"></td></tr>
+            <tr><td>Post 7</td><td id="6-0"></td><td id="6-1"></td><td id="6-2"></td><td id="6-3"></td></tr>
+            <tr><td>Post 8</td><td id="7-0"></td><td id="7-1"></td><td id="7-2"></td><td id="7-3"></td></tr>
+            <tr class="last"><td>Total</td><td id="0">0.0</td><td id="1">0.0</td><td id="2">0.0</td><td id="3">0.0</td></tr>
         </table>
 
         <h2>Kort over Nybrogård</h2>
