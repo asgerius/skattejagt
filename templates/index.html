@@ -58,7 +58,9 @@
             };
             let post1Value;
             let post5Value;
-            let post6Value;
+            let post51Value;
+            let post61Value;
+            let post62Value;
             let post7Value;
 
             window.onload = () => {
@@ -112,10 +114,14 @@
                 // Post 5
                 document.getElementById("input-5").value = null;
                 document.getElementById("input-5").oninput = (event) => { post5Value = Number.parseInt(event.target.value); };
+                document.getElementById("input-5-1").value = null;
+                document.getElementById("input-5-1").oninput = (event) => { post51Value = Number.parseFloat(event.target.value); };
 
                 // Post 6
-                document.getElementById("input-6").value = null;
-                document.getElementById("input-6").oninput = (event) => { post6Value = Number.parseFloat(event.target.value); };
+                document.getElementById("input-6-1").value = null;
+                document.getElementById("input-6-1").oninput = (event) => { post61Value = event.target.value; };
+                document.getElementById("input-6-2").value = null;
+                document.getElementById("input-6-2").oninput = (event) => { post62Value = event.target.value; };
 
                 // Post 7
                 document.getElementById("input-7").value = null;
@@ -135,7 +141,7 @@
 
                 if (showHint) {
                     setVisible(document.getElementById("if-hint"), true);
-                    document.getElementById("hint").innerHTML = `<p>Gå til post ${currentTask % 8 + 1}</p>`
+                    document.getElementById("hint").innerHTML = `<p>Gå til post ${currentTask % 8 + 1}. Indtast postens kode, når fundet.</p>`
                 } else {
                     setVisible(document.getElementById("if-hint"), false);
                     setVisible(document.getElementById(`task-${currentTask}`), true);
@@ -236,14 +242,21 @@
             };
 
             const post5Submit = async () => {
-                const numItems = 10;
-                const score = 5 * post5Value / numItems;
+                const numItems = 8;
+                let score = 2.5 * post5Value / numItems;
+                const value = Math.max(10, post51Value) - 10;
+                score += 2.5 * Math.exp(-value / 10);
                 await submitScore(score);
             };
 
             const post6Submit = async () => {
-                const value = Math.max(10, post6Value) - 10;
-                const score = 5 * Math.exp(-value / 10);
+                let score = 0;
+                if (post61Value === "2") {
+                    score += 2.5;
+                }
+                if (post62Value === "4") {
+                    score += 2.5;
+                }
                 await submitScore(score);
             };
 
@@ -374,15 +387,19 @@
                 <button id="submit-4">Indsend svar</button>
             </div>
             <div id="task-5">
-                <h2>Post 6: Husk Lines liv</h2>
-                <p>I har tyve sekunder til at huske ting på et billede.</p>
+                <h2>Post 6: Husk Lines liv + snørrebånd</h2>
+                <p>Valdemar foklarer.</p>
+                <p>Ting husket</p>
                 <input id="input-5">
+                <p>Snørrebåndstid</p>
+                <input id="input-5-1"><br><br>
                 <button id="submit-5">Indsend svar</button>
             </div>
             <div id="task-6">
-                <h2>Post 7: Snørrebåndsspisning</h2>
-                <p>Udvælg jeres ypperste Snørrebåndsspiser! Line tager tid på, hvor hurtigt vedkommende kan spise et snørrebånd.</p>
-                <input id="input-6">
+                <h2>Post 7: Lines tal</h2>
+                <p>Indtast to tal fra 1 til 5. Tallene er på mystisk vis relaterede til Line.</p>
+                <input id="input-6-1"><br>
+                <input id="input-6-2"><br>
                 <button id="submit-6">Indsend svar</button>
             </div>
             <div id="task-7">
@@ -422,8 +439,8 @@
             <tr class="last"><td>Total</td><td id="0">0.0</td><td id="1">0.0</td><td id="2">0.0</td><td id="3">0.0</td></tr>
         </table>
 
-        <h2>Kort over Nybrogård</h2>
-        <p>Jeres færd er ikke garanteret at blive inde for kortet &ndash; men fat mod, svende, og så vil lykkens gudinde tilsmile jer, inden aftenen er omme!</p>
+        <h2>Kort over området</h2>
+        <p>Jeres færd kan føre jer til mange farer, men også lykke. Fat mod, og så vil lykkens gudinde tilsmile jer, inden aftenen er omme!</p>
         <img src="{{ kort }}">
     </body>
 </html>
